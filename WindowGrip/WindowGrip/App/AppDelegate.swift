@@ -13,7 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, EventMonitorDelegate {
     
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Build timestamp for version tracking
-        let buildDate = "2026-01-31 13:20:00"
+        let buildDate = "2026-02-11 16:15:00"
         print("WindowGrip started - Build: \(buildDate)")
         
         // Request accessibility permissions

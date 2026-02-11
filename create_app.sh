@@ -41,10 +41,24 @@ sed -i '' "s/\$(PRODUCT_NAME)/$APP_NAME/g" "$DEST_PLIST"
 sed -i '' "s/\$(PRODUCT_BUNDLE_PACKAGE_TYPE)/APPL/g" "$DEST_PLIST"
 sed -i '' "s/\$(DEVELOPMENT_LANGUAGE)/en/g" "$DEST_PLIST"
 
-# 5. Code Signing (Ad-hoc)
+# 5. Copy Entitlements
+echo "Copying entitlements..."
+SOURCE_ENTITLEMENTS="WindowGrip/WindowGrip/App/WindowGrip.entitlements"
+DEST_ENTITLEMENTS="$CONTENTS_DIR/WindowGrip.entitlements"
+if [ -f "$SOURCE_ENTITLEMENTS" ]; then
+    cp "$SOURCE_ENTITLEMENTS" "$DEST_ENTITLEMENTS"
+fi
+
+# 6. Code Signing with stable identifier
 echo "Signing app bundle..."
-codesign --force --deep --sign - "$APP_BUNDLE"
+# Use the bundle identifier for more stable signing
+# This helps macOS recognize it as the same app across rebuilds
+codesign --force --deep --sign - --identifier "com.example.WindowGrip" "$APP_BUNDLE"
 
 echo ""
 echo "✅ $APP_BUNDLE created successfully!"
 echo "You can move this to your Applications folder or Desktop."
+echo ""
+echo "Note: If you've already granted permissions to a previous version,"
+echo "you may need to remove the old app from System Settings > Privacy & Security > Accessibility"
+echo "and re-add the new one."
